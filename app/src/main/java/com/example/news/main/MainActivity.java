@@ -5,9 +5,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.news.R;
-import com.example.news.base.BaseActivity;
+import com.example.news.base.MvpActivity;
 
-public class MainActivity extends BaseActivity<MainView,MainPresenter,WorkBean> implements MainView{
+public class MainActivity extends MvpActivity<MainView,MainPresenter,WorkBean> implements MainView{
 
 
     @Override
