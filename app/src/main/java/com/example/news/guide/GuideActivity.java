@@ -1,48 +1,39 @@
 package com.example.news.guide;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.example.news.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.news.translate.translateActivity;
+import com.example.news.utils.Preferencesutils;
 
 public class GuideActivity extends AppCompatActivity {
 
     private ViewPager guideViewpager;
-    List<ImageView> ImageList = new ArrayList<>();
     private ImageView redDotView;
     private RelativeLayout rl;
+    float distance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
         initView();
-        initData();
 
-        GuideAdapter adapter = new GuideAdapter(ImageList);
+        GuideAdapter adapter = new GuideAdapter();
         guideViewpager.setAdapter(adapter);
         guideViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //当前位置：position，百分比：positionOffset，移动距离：positionOffsetPixels
-//                Log.e("--------", position + ":" + positionOffset + ":" + positionOffsetPixels);
-//                int width = rl.getMeasuredWidth();
-////                Log.e("--------",width+"" );
-//                int w = width / 3;
-////                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams();
-//                Log.e("--------", (w*positionOffset + position)+10 + "");
-//                redDotView.setTranslationX((w*positionOffset + position)+10);
-                position = position % ImageList.size();
-                float leftMargin = 65 * (position + positionOffset);
-                redDotView.setTranslationX(leftMargin);
-                Log.d("红点在这", leftMargin + "");
+                gitDotDistance(rl);
+                float v = (positionOffset + position) * distance;
+                redDotView.setTranslationX(v);
             }
 
             @Override
@@ -55,13 +46,27 @@ public class GuideActivity extends AppCompatActivity {
 
             }
         });
+        adapter.setonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Preferencesutils.putBoolean("splash",false);
+                Intent intent = new Intent(GuideActivity.this, translateActivity.class);
+                startActivity(intent);
+                GuideActivity.this.finish();
+            }
+        });
     }
 
-    //调用addImage，这样少new 几个ImageView
-    private void initData() {
-        addImage(R.drawable.guide_1);
-        addImage(R.drawable.guide_2);
-        addImage(R.drawable.guide_3);
+    //获取点与点之间的距离
+    public void gitDotDistance(final RelativeLayout rl) {
+        this.rl.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                View childAt0 = rl.getChildAt(0);
+                View childAt1 = rl.getChildAt(1);
+                distance = childAt1.getX() - childAt0.getX();
+            }
+        });
     }
 
     private void initView() {
@@ -70,10 +75,4 @@ public class GuideActivity extends AppCompatActivity {
         rl = (RelativeLayout) findViewById(R.id.rl);
     }
 
-    //把guide_1,2,3存入Imageview在存入Arrlist中
-    public void addImage(int id) {
-        ImageView imageView = new ImageView(this);
-        imageView.setImageResource(id);
-        ImageList.add(imageView);
-    }
 }

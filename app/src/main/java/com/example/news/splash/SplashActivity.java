@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import com.example.news.R;
 import com.example.news.base.BaseActivity;
 import com.example.news.guide.GuideActivity;
+import com.example.news.main.MainActivity;
+import com.example.news.utils.Preferencesutils;
 
 public class SplashActivity extends BaseActivity {
 
@@ -43,9 +45,16 @@ public class SplashActivity extends BaseActivity {
         animatorSet.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                Intent intent = new Intent(context, GuideActivity.class);
-                startActivity(intent);
-                SplashActivity.this.finish();
+                boolean b = Preferencesutils.getboolean("splash", true);
+                if (b){
+                    Intent intent = new Intent(context, GuideActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                }else {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    startActivity(intent);
+                    SplashActivity.this.finish();
+                }
             }
         });
         animatorSet.playTogether(rotation,scaleX,scaleY,alpha);

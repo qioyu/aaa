@@ -1,4 +1,4 @@
-package com.example.news.main;
+package com.example.news.translate;
 
 import java.util.List;
 

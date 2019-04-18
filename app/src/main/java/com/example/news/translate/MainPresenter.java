@@ -1,6 +1,4 @@
-package com.example.news.main;
-
-import android.view.View;
+package com.example.news.translate;
 
 import com.example.news.base.Basepresenter;
 import com.example.news.base.ModelManager;

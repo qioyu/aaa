@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.news.R;
@@ -14,10 +15,17 @@ import java.util.List;
 
 public class GuideAdapter extends PagerAdapter {
 
-    List<ImageView> guideimageidlist = new ArrayList<>();
+    List<Integer> guideimageidlist = new ArrayList<>();
+    View.OnClickListener onClickListener;
 
-    public GuideAdapter(List<ImageView> imageList) {
-        this.guideimageidlist = imageList;
+    public void setonClickListener(View.OnClickListener onClickListener){
+        this.onClickListener = onClickListener;
+    }
+
+    public GuideAdapter() {
+        guideimageidlist.add(R.drawable.guide_1);
+        guideimageidlist.add(R.drawable.guide_2);
+        guideimageidlist.add(R.drawable.guide_3);
     }
 
     @Override
@@ -34,13 +42,25 @@ public class GuideAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
 
-        container.addView(guideimageidlist.get(position));
-        return guideimageidlist.get(position);
+        View inflate = LayoutInflater.from(container.getContext()).inflate(R.layout.pager_guide, container, false);
+        ImageView imageView = inflate.findViewById(R.id.guideImageView);
+        imageView.setImageResource(guideimageidlist.get(position));
+        Button button = inflate.findViewById(R.id.gui_button);
+        if (position == guideimageidlist.size() - 1) {
+            button.setVisibility(View.VISIBLE);
+            if (onClickListener!=null){
+                button.setOnClickListener(onClickListener);
+            }
+        } else {
+            inflate.findViewById(R.id.gui_button).setVisibility(View.GONE);
+        }
+        container.addView(inflate);
+        return inflate;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView(guideimageidlist.get(position));
+        container.removeView((View) object);
     }
 
 }

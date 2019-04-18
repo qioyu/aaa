@@ -1,4 +1,4 @@
-package com.example.news.main;
+package com.example.news.translate;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
